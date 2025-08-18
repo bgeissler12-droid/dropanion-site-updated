@@ -84,8 +84,8 @@
     .feature-learn-more:hover { background:#2A80F7; color:#fff; }
 
     .pricing-section { background:#121212; padding:4rem 2rem; }
-    .pricing-container { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; }
-    .card { background:#1a1a1a; border-radius:12px; padding:2rem; min-height:610px; box-shadow:0 4px 20px rgba(0,0,0,.6); text-align:center; position:relative; display:flex; flex-direction:column; justify-content:flex-start; flex-shrink:0; }
+    .pricing-container { max-width:1200px; margin:0 auto; display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:2rem; }
+    .card { background:#1a1a1a; border-radius:12px; padding:2rem; min-height:610px; box-shadow:0 4px 20px rgba(0,0,0,.6); text-align:center; position:relative; display:flex; flex-direction:column; justify-content:flex-start; flex-shrink:1; min-width:0; }
     .card.popular { border:2px solid var(--popular-border); }
     .badge { font-weight:900; padding:.25rem .75rem; border-radius:999px; font-size:.82rem; display:inline-block; margin-bottom:1rem; letter-spacing:.04em; }
     .badge.yellow{background:#ffc400;color:#000;} .badge.blue{background:#1c44a1;color:#fff;} .badge.purple{background:var(--elite-purple);color:#fff;} .badge.silver{background:var(--silver);color:#1a1a1a;}
@@ -102,6 +102,12 @@
     .sub-bullets li::before { content:'\2713'; position:absolute; left:0; color:var(--electric-blue); font-weight:bold; font-size:1em; }
     .cta { margin-top:auto; padding:.75rem 1rem; background:var(--electric-blue); border:none; color:#fff; font-weight:bold; border-radius:6px; cursor:pointer; width:100%; font-size:1rem; transition: background .2s; }
     .cta:hover { background:#1865d8; }
+  /* Inline promo code row for Starter */
+  .promo-inline{display:inline-flex;align-items:center;gap:.5rem;margin-top:.4rem;flex-wrap:wrap;}
+  .promo-inline .code-pill{display:inline-flex;align-items:center;gap:.4rem;background:#0b2a52;border:1px solid #1e429f;color:#cfe3ff;padding:.28rem .6rem;border-radius:999px;font-weight:800;letter-spacing:.02em;white-space:normal;max-width:100%;}
+  .promo-inline .copy-btn{background:#123169;border:1px solid #1e429f;color:#cfe3ff;padding:.24rem .55rem;border-radius:8px;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .promo-inline .copy-btn:hover{background:#1d3f7a}
+
 
     footer { border-top:1px solid #1d2630; margin-top:60px; color:#94a3b8; }
     .footer-inner { max-width:1200px; margin:0 auto; padding:24px 16px; font-size:.9rem; }
@@ -430,6 +436,7 @@ html { scroll-behavior: smooth; }
 <div class="price-discount">$149</div>
 <div class="price">$80</div>
 <div class="price-note">First month only, then $149/mo</div>
+<div class="promo-inline"><span class="code-pill">Use code <strong>START80</strong></span><button class="copy-btn" onclick="copyCode('START80')">Copy</button></div>
 </div>
 <ul class="spaced-features">
 <li>3,000 listings per month</li>
@@ -580,5 +587,18 @@ html { scroll-behavior: smooth; }
   });
 })();
 </script>
-</section></body>
+</section>
+<script>
+function copyCode(code){
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(code);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = code; document.body.appendChild(ta);
+    ta.select(); try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+  }
+}
+</script>
+</body>
 </html>
