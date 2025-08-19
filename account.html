@@ -6,13 +6,12 @@
   <title>Dropanion — Account</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root { --bg:#0b0f14; --card:#121820; --text:#fff; --muted:#9fb3c8; --blue:#2A80F7; --green:#1F7A75; --border:#1d2630; }
+    :root { --bg:#0b0f14; --card:#121820; --text:#fff; --muted:#9fb3c8; --blue:#2A80F7; --border:#1d2630; }
     * { box-sizing: border-box; }
     body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
     .wrap { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
     .card { width: 100%; max-width: 520px; background: var(--card); border:1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: 0 10px 28px rgba(0,0,0,.35); }
     h1 { margin: 8px 0 14px; font-size: 26px; font-weight: 800; text-align:center; }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     label { font-size: 13px; color: var(--muted); display:block; margin-bottom: 6px; }
     input { width: 100%; padding: 12px 14px; border-radius: 10px; border:1px solid var(--border); background:#0e1419; color:#fff; }
     .btn { width: 100%; padding: 12px 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; }
@@ -20,7 +19,6 @@
     .btn.secondary { background: transparent; color: #cbd5e1; border:1px solid var(--border); }
     .muted { color: var(--muted); font-size: 13px; text-align:center; }
     .hr { height:1px; background: var(--border); margin: 12px 0; }
-    .top-right { position: fixed; top: 10px; right: 16px; }
     .error { color: #f87171; font-size: 13px; margin-top: 6px; min-height: 18px; }
     .success { color: #34d399; font-size: 13px; margin-top: 6px; min-height: 18px; }
     .hidden { display:none !important; }
@@ -32,40 +30,37 @@
   </style>
 </head>
 <body>
-  <a class="top-right muted" href="/">← Back to website</a>
+  <a class="muted" style="position:fixed;top:10px;right:16px;" href="/">← Back to website</a>
   <div class="wrap">
+    <!-- Auth Card -->
     <div class="card" id="authCard">
       <h1 id="formTitle">Create an account</h1>
-      <div class="row">
-        <div>
-          <label for="firstName">First name</label>
-          <input id="firstName" placeholder="Max">
-        </div>
-        <div>
-          <label for="lastName">Last name</label>
-          <input id="lastName" placeholder="Robinson">
-        </div>
-      </div>
-      <div style="margin-top:10px;">
+
+      <div>
         <label for="email">Email</label>
-        <input id="email" type="email" placeholder="m@example.com" autocomplete="email">
+        <input id="email" type="email" placeholder="you@example.com" autocomplete="email">
       </div>
+
+      <div style="margin-top:10px;" id="confirmEmailRow">
+        <label for="email2">Confirm email</label>
+        <input id="email2" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+
       <div style="margin-top:10px;">
         <label for="password">Password</label>
         <input id="password" type="password" placeholder="••••••••" autocomplete="new-password">
       </div>
+
       <div id="authError" class="error"></div>
       <div class="cta-row">
         <button id="registerBtn" class="btn primary">Register</button>
         <button id="toggleBtn" class="btn secondary">Have an account? Log in</button>
       </div>
-      <div class="hr"></div>
-      <div class="center">
-        <button id="googleBtn" class="btn secondary" style="max-width:320px;">Continue with Google</button>
-        <p class="muted" style="margin-top:10px;">By clicking continue, you agree to our <a href="/terms.html" target="_blank">Terms</a> & <a href="/privacy.html" target="_blank">Privacy</a>.</p>
-      </div>
+
+      <p class="muted" style="margin-top:10px;">By clicking continue, you agree to our <a href="/terms.html" target="_blank">Terms</a> & <a href="/privacy.html" target="_blank">Privacy</a>.</p>
     </div>
 
+    <!-- Plans Card -->
     <div class="card hidden" id="plansCard">
       <h1>Choose your plan</h1>
       <p class="muted center" id="welcomeTxt">Welcome! Select a package to continue.</p>
@@ -90,7 +85,7 @@
   <!-- Firebase (modular v10) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
     // 1) Paste your Firebase config here
     const firebaseConfig = {
@@ -111,19 +106,16 @@
       "50k":   "https://buy.stripe.com/9B63cv5EcgRteY2bSe6kg0d",
     };
 
-    // Optional: TEST links (fill if you create test Payment Links)
-    const TEST_PAYMENT_LINKS = {
-      starter: "", growth: "", pro: "", "15k":"", "25k":"", "35k":"", "50k":""
-    };
+    // Optional: TEST links
+    const TEST_PAYMENT_LINKS = { starter:"", growth:"", pro:"", "15k":"", "25k":"", "35k":"", "50k":"" };
 
-    // Decide which set to use (localhost/staging use TEST if available)
     const isLocal = location.hostname === "localhost" || location.hostname.includes("127.0.0.1");
     const LINKS = (isLocal && Object.values(TEST_PAYMENT_LINKS).some(v => v)) ? TEST_PAYMENT_LINKS : PAYMENT_LINKS;
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // UI helpers
+    // UI
     const $ = id => document.getElementById(id);
     const authCard = $("authCard");
     const plansCard = $("plansCard");
@@ -133,61 +125,61 @@
     const planSuccess = $("planSuccess");
     const toggleBtn = $("toggleBtn");
     const registerBtn = $("registerBtn");
-    const googleBtn = $("googleBtn");
     const continueBtn = $("continueBtn");
     const logoutBtn = $("logoutBtn");
-    const firstName = $("firstName");
-    const lastName = $("lastName");
     const email = $("email");
+    const email2 = $("email2");
     const password = $("password");
+    const welcomeTxt = $("welcomeTxt");
+
+    // Preselect plan if passed in ?plan=
+    const urlParams = new URLSearchParams(location.search);
+    const preselect = (urlParams.get("plan") || "").toLowerCase();
+    if (preselect) {
+      const el = document.querySelector('input[name="plan"][value="'+preselect+'"]');
+      if (el) el.checked = true;
+    }
 
     let mode = "register"; // or "login"
-
     toggleBtn.addEventListener("click", () => {
       if (mode === "register") {
         mode = "login";
         formTitle.textContent = "Log in";
         toggleBtn.textContent = "Need an account? Register";
         registerBtn.textContent = "Log in";
-        firstName.parentElement.classList.add("hidden");
-        lastName.parentElement.classList.add("hidden");
-        password.setAttribute("autocomplete","current-password");
+        document.getElementById("confirmEmailRow").classList.add("hidden");
+        password.setAttribute("autocomplete", "current-password");
       } else {
         mode = "register";
         formTitle.textContent = "Create an account";
         toggleBtn.textContent = "Have an account? Log in";
         registerBtn.textContent = "Register";
-        firstName.parentElement.classList.remove("hidden");
-        lastName.parentElement.classList.remove("hidden");
-        password.setAttribute("autocomplete","new-password");
+        document.getElementById("confirmEmailRow").classList.remove("hidden");
+        password.setAttribute("autocomplete", "new-password");
       }
       authError.textContent = "";
     });
+
+    function validateRegister() {
+      if (!email.value || !email2.value || !password.value) return "Please complete all fields.";
+      if (email.value.trim().toLowerCase() !== email2.value.trim().toLowerCase()) return "Emails do not match.";
+      if (password.value.length < 6) return "Password must be at least 6 characters.";
+      return null;
+    }
 
     registerBtn.addEventListener("click", async () => {
       authError.textContent = "";
       try {
         if (mode === "register") {
-          if (!email.value || !password.value) throw new Error("Enter email & password");
-          const cred = await createUserWithEmailAndPassword(auth, email.value.trim(), password.value);
-          if (firstName.value || lastName.value) {
-            await updateProfile(cred.user, { displayName: (firstName.value + " " + lastName.value).trim() });
-          }
+          const err = validateRegister();
+          if (err) throw new Error(err);
+          await createUserWithEmailAndPassword(auth, email.value.trim(), password.value);
         } else {
+          if (!email.value || !password.value) throw new Error("Enter email & password");
           await signInWithEmailAndPassword(auth, email.value.trim(), password.value);
         }
       } catch (e) {
         authError.textContent = e.message || "Could not authenticate";
-      }
-    });
-
-    googleBtn.addEventListener("click", async () => {
-      authError.textContent = "";
-      try {
-        const provider = new GoogleAuthProvider();
-        await signInWithPopup(auth, provider);
-      } catch (e) {
-        authError.textContent = e.message || "Google sign-in failed";
       }
     });
 
@@ -197,12 +189,10 @@
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Show plans
         authCard.classList.add("hidden");
         plansCard.classList.remove("hidden");
-        document.getElementById("welcomeTxt").textContent = `Welcome, ${user.email}! Choose your package to continue.`;
+        welcomeTxt.textContent = `Welcome, ${user.email}! Choose your package to continue.`;
       } else {
-        // Show auth
         plansCard.classList.add("hidden");
         authCard.classList.remove("hidden");
       }
@@ -227,10 +217,8 @@
         planError.textContent = "Please sign in again.";
         return;
       }
-      // Build URL with prefilled email; add client_reference_id if supported
       const params = new URLSearchParams();
-      params.set("prefilled_email", user.email);
-      // Stripe may ignore client_reference_id on Payment Links; safe to include.
+      params.set("prefilled_email", user.email || "");
       params.set("client_reference_id", user.uid);
       const url = link + (link.includes("?") ? "&" : "?") + params.toString();
       planSuccess.textContent = "Redirecting to secure checkout...";
