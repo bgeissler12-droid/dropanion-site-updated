@@ -93,17 +93,28 @@
   <script>
     // Configure: where is your verification endpoint?
     // Example (Vercel/Netlify/Express): /api/checkout-session?session_id=...
-    const VERIFY_ENDPOINT = "/api/checkout-session";
+    const VERIFY_ENDPOINT = ""; // trusting redirect mode
 
     async function main() {
+      const trustMode = !VERIFY_ENDPOINT;
+
       const params = new URLSearchParams(location.search);
       const sessionId = params.get("session_id");
       const sessEl = document.getElementById("sessId");
       const emailEl = document.getElementById("custEmail");
       if (sessionId) sessEl.textContent = sessionId;
 
-      // If you haven't set up a backend yet, show placeholders and return.
-      if (!VERIFY_ENDPOINT) return;
+      // If you haven't set up a backend yet, mark as verified and reveal links.
+      if (trustMode) {
+        document.getElementById("statusLoading").classList.add("hide");
+        document.getElementById("statusOk").classList.remove("hide");
+        // Reveal links (use whatever hrefs are already in the HTML)
+        const locked = document.getElementById("linksLocked");
+        const unlocked = document.getElementById("linksUnlocked");
+        if (locked) locked.classList.add("hide");
+        if (unlocked) unlocked.classList.remove("hide");
+        return;
+      }
 
       try {
         const res = await fetch(VERIFY_ENDPOINT + "?session_id=" + encodeURIComponent(sessionId || ""));
@@ -130,63 +141,5 @@
     }
     main();
   </script>
-
-<script>
-(function(){
-  // Map recognized plans to labels & prices
-  const PLANS = {
-    "15k": { label: "15k Listings", price: 549 },
-    "25k": { label: "25k Listings", price: 899 },
-    "35k": { label: "35k Listings", price: 1249 },
-    "50k": { label: "50k Listings", price: 1499 },
-    // Optional: handle non-enterprise tiers without prices
-    "starter": { label: "Starter", price: null },
-    "growth":  { label: "Growth",  price: null },
-    "pro":     { label: "Pro",     price: null },
-  };
-
-  const fmtUSD = n => n.toLocaleString("en-US", {
-    style: "currency", currency: "USD",
-    minimumFractionDigits: 0, maximumFractionDigits: 0
-  });
-
-  const params = new URLSearchParams(location.search);
-  const key = (params.get("plan") || "").toLowerCase().trim();
-
-  if (!key) return; // No plan param; leave page as-is
-
-  const plan = PLANS[key] || { label: key.toUpperCase(), price: null };
-
-  // Try to populate existing placeholders first
-  const labelEl = document.querySelector("#planLabel, [data-plan-label]");
-  const priceEl = document.querySelector("#planPrice, [data-plan-price]");
-
-  if (labelEl) labelEl.textContent = plan.label;
-  if (priceEl) priceEl.textContent = plan.price != null ? fmtUSD(plan.price) : "";
-
-  // If there were no placeholders, inject a small summary banner at the top
-  if (!labelEl && !priceEl) {
-    const wrap = document.createElement("div");
-    wrap.setAttribute("style",
-      "margin:16px auto;max-width:900px;padding:12px 16px;border-radius:12px;" +
-      "background:#0f1317;border:1px solid #1d2630;color:#fff;" +
-      "font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif"
-    );
-    const priceHTML = plan.price != null
-      ? '<div style="font-weight:900;font-size:20px;color:#2A80F7;">' + fmtUSD(plan.price) + '</div>'
-      : "";
-    wrap.innerHTML =
-      '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;">' +
-        '<div style="font-weight:800;">' + plan.label + '</div>' +
-        priceHTML +
-      '</div>' +
-      '<div style="color:#9fb3c8;font-size:13px;margin-top:4px;">' +
-        (plan.price != null ? 'Billed monthly' : '') +
-      '</div>';
-    document.body.prepend(wrap);
-  }
-})();
-</script>
-
 </body>
 </html>
