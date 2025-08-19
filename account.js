@@ -4,10 +4,10 @@
 
     // 1) Paste your Firebase config here
     const firebaseConfig = {
-      apiKey: "AIzaSyAKUr1JTa4017Cn3S9N_5VcVx9CY4NuBnY",
-      authDomain: "dropiq-ebay-software.firebaseapp.com",
-      projectId: "dropiq-ebay-software",
-      appId: "1:895307134468:web:9833f7e5376fee1c552751",
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      appId: "YOUR_APP_ID",
     };
 
     // 2) Stripe Payment Links (LIVE)
@@ -102,18 +102,35 @@
       await signOut(auth);
     });
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        authCard.classList.add("hidden");
-        plansCard.classList.remove("hidden");
-        welcomeTxt.textContent = `Welcome, ${user.email}! Choose your package to continue.`;
-      } else {
-        plansCard.classList.add("hidden");
-        authCard.classList.remove("hidden");
-      }
-    });
+    
+onAuthStateChanged(auth, (user) => {
+  // Read the plan from URL (if user clicked a tier before auth)
+  const urlParams = new URLSearchParams(location.search);
+  const planKey = (urlParams.get("plan") || "").toLowerCase();
+  const linkFor = (k) => (k && LINKS[k]) ? LINKS[k] : null;
 
-    continueBtn.addEventListener("click", () => {
+  if (user) {
+    // If a plan was specified, go straight to its Stripe Payment Link
+    const planLink = linkFor(planKey);
+    if (planLink) {
+      const params = new URLSearchParams();
+      params.set("prefilled_email", user.email || "");
+      params.set("client_reference_id", user.uid);
+      const url = planLink + (planLink.includes("?") ? "&" : "?") + params.toString();
+      location.href = url;
+      return;
+    }
+    // No plan specified: send the user back to the homepage pricing section
+    location.href = "/#pricing";
+  } else {
+    // Not authenticated: show the email/password form
+    const authCard = document.getElementById("authCard");
+    const plansCard = document.getElementById("plansCard");
+    if (plansCard) plansCard.classList.add("hidden"); // never show the selector UI in this flow
+    if (authCard) authCard.classList.remove("hidden");
+  }
+});
+continueBtn.addEventListener("click", () => {
       planError.textContent = "";
       planSuccess.textContent = "";
       const selected = document.querySelector('input[name="plan"]:checked');
