@@ -39,7 +39,17 @@
     .logo {
       display:flex; align-items:center; gap:.65rem; margin-bottom:1rem;
     }
-    .circle { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg, #2A80F7 0%, #31A4D0 100%); box-shadow:0 0 24px #2A80F733 inset; }
+    .circle { position: relative; display:block;
+} 
+.circle .avatar-icon{
+  position:absolute;
+  top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  width:86%; height:86%;
+  border-radius:50%;
+  object-fit:contain;
+} 
+.circle { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg, #2A80F7 0%, #31A4D0 100%); box-shadow:0 0 24px #2A80F733 inset; }
     .brand { font-weight:900; letter-spacing:.02em; }
     .note { background:#101418; border:1px dashed #233042; border-radius:10px; padding:.9rem 1rem; }
     .small { font-size:.9rem; }
@@ -48,7 +58,7 @@
 </head>
 <body>
   <div class="wrap">
-    <div class="logo"><div class="circle"></div><div><div class="brand">Dropanion</div><div class="small muted">Welcome aboard</div></div></div>
+    <div class="logo"><div class="circle"><img src="robot-logo.png" alt="Dropanion logo" class="avatar-icon"></div><div><div class="brand">Dropanion</div><div class="small muted">Welcome aboard</div></div></div>
     <h1>You're in! 🎉</h1>
     <div class="sub">Thanks for subscribing. We’re getting your access ready.</div>
 
@@ -70,11 +80,11 @@
         <h2 style="margin:0 0 .4rem;font-size:1.2rem;">Your Next Steps</h2>
         <p class="muted">These links unlock after we confirm your payment with Stripe.</p>
         <div id="linksLocked">
-          <a class="btn secondary" href="#" onclick="return false;">Join Discord (locked)</a>
-          <a class="btn secondary" href="#" onclick="return false;">Download Software (locked)</a>
+          <a class="btn secondary" href="#" onclick="return false;">Join Discord</a>
+          <a class="btn secondary" href="#" onclick="return false;">Download Software</a>
         </div>
         <div id="linksUnlocked" class="hide">
-          <a id="discordBtn" class="btn" href="#" target="_blank" rel="noopener">Join Discord</a>
+          <a id="discordBtn" class="btn" href="https://discord.gg/c5tVyEME" target="_blank" rel="noopener">Join Discord</a>
           <a id="downloadBtn" class="btn" href="#" target="_blank" rel="noopener">Download Software</a>
           <p class="muted small" style="margin-top:.7rem;">Having trouble? Email <strong>help@dropanion.com</strong>.</p>
         </div>
@@ -108,32 +118,9 @@
       if (trustMode) {
         document.getElementById("statusLoading").classList.add("hide");
         document.getElementById("statusOk").classList.remove("hide");
-        // Reveal links (use whatever hrefs are already in the HTML)
-        const locked = document.getElementById("linksLocked");
-        const unlocked = document.getElementById("linksUnlocked");
-        if (locked) locked.classList.add("hide");
-        if (unlocked) unlocked.classList.remove("hide");
-        return;
-      }
-
-      try {
-        const res = await fetch(VERIFY_ENDPOINT + "?session_id=" + encodeURIComponent(sessionId || ""));
-        const data = await res.json();
-
-        // Update status
-        document.getElementById("statusLoading").classList.add("hide");
-        if (!res.ok || !data || !data.ok) {
-          document.getElementById("statusErr").classList.remove("hide");
-          return;
-        }
-        document.getElementById("statusOk").classList.remove("hide");
-        emailEl.textContent = data.email || "—";
-
         // Reveal links
         document.getElementById("linksLocked").classList.add("hide");
         document.getElementById("linksUnlocked").classList.remove("hide");
-        document.getElementById("discordBtn").href = data.discordInviteUrl || "#";
-        document.getElementById("downloadBtn").href = data.downloadUrl || "#";
       } catch (e) {
         document.getElementById("statusLoading").classList.add("hide");
         document.getElementById("statusErr").classList.remove("hide");
