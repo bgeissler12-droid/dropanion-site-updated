@@ -4,10 +4,10 @@
 
     // 1) Paste your Firebase config here
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      appId: "YOUR_APP_ID",
+      apiKey: "AIzaSyAKUr1JTa4017Cn3S9N_5VcVx9CY4NuBnY",
+      authDomain: "dropiq-ebay-software.firebaseapp.com",
+      projectId: "dropiq-ebay-software",
+      appId: "1:895307134468:web:9833f7e5376fee1c552751",
     };
 
     // 2) Stripe Payment Links (LIVE)
