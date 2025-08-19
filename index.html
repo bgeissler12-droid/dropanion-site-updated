@@ -192,6 +192,22 @@ html { scroll-behavior: smooth; }
   padding:0; overflow:hidden;
 }
 #bookcall { scroll-margin-top: 90px; }
+
+/* --- Enterprise selector (blank-first) --- */
+.enterprise-picker{ display:flex; flex-direction:column; gap:.8rem; margin-top:auto; align-self:stretch; width:100%; }
+.ep-head{ display:flex; align-items:flex-end; justify-content:space-between; }
+.ep-title{ font-weight:800; font-size:1.05rem; color:#fff; }
+.ep-price{ font-size:1.8rem; font-weight:900; display:none; }
+.ep-price small{ font-size:.95rem; font-weight:600; color:#31A4D0; margin-left:.4rem; }
+.ep-select{ width:100%; background:#11161b; color:#fff; border:1px solid #1d2630; border-radius:12px; padding:.8rem 1rem; font-weight:700; }
+#epCheckout{ display:none; }
+.ep-annual{ display:none; font-size:.95rem; color:#31A4D0; text-align:left; }
+
+/* After a selection is made */
+#enterprisePicker.has-selection .ep-price{ display:block; }
+#enterprisePicker.has-selection #epCheckout{ display:inline-block; }
+#enterprisePicker.has-selection .ep-annual{ display:block; }
+
 </style>
 </head>
 <body>
@@ -509,7 +525,23 @@ html { scroll-behavior: smooth; }
 <li>15k, 25k, 35k, and 50k listings</li>
 <li>Dedicated onboarding</li>
 </ul>
-<button class="cta">Choose Package</button>
+<div class="enterprise-picker" id="enterprisePicker">
+  <div class="ep-head">
+    <div class="ep-title"><span id="epPlanLabel">Choose Package</span></div>
+    <div class="ep-price"><span id="epPrice"></span> <small>per month</small></div>
+  </div>
+
+  <select class="ep-select" id="epSelect" aria-label="Select Enterprise package">
+    <option value="" selected disabled>Choose Package</option>
+    <option value="15k">15k Listings</option>
+    <option value="25k">25k Listings</option>
+    <option value="35k">35k Listings</option>
+    <option value="50k">50k Listings</option>
+  </select>
+
+  <button class="cta" id="epCheckout">Start Now</button>
+  <div class="ep-annual" id="epAnnual" aria-live="polite"></div>
+</div>
 </div>
 </div>
 </section>
@@ -600,5 +632,49 @@ function copyCode(code){
   }
 }
 </script>
+
+<script>
+(function(){
+  // Replace with real prices and Stripe links
+  const ENT_PLANS = {
+    '15k': { label: '15k Listings', price: 549.00, stripe: 'https://buy.stripe.com/eVq5kDeaIgRteY22hE6kg0a' },
+    '25k': { label: '25k Listings', price: 899.00, stripe: 'https://buy.stripe.com/bJedR9giQbx9dTYf4q6kg0b' },
+    '35k': { label: '35k Listings', price: 1249.00, stripe: 'https://buy.stripe.com/aFa4gz5EceJldTY4pM6kg0c' },
+    '50k': { label: '50k Listings', price: 1499.00, stripe: 'https://buy.stripe.com/9B63cv5EcgRteY2bSe6kg0d' }
+  };
+
+  const $ = (id) => document.getElementById(id);
+  const picker = $('enterprisePicker');
+  const select = $('epSelect');
+  const label = $('epPlanLabel');
+  const price = $('epPrice');
+  const annual = $('epAnnual');
+  const checkout = $('epCheckout');
+
+  function fmtUSD(n){ return n.toLocaleString('en-US', { style:'currency', currency:'USD' }); }
+
+  function resetUI(){
+    picker.classList.remove('has-selection');
+    label.textContent = 'Choose Package';
+    price.textContent = '';
+    annual.textContent = '';
+  }
+
+  function updateUI(){
+    const key = select.value;
+    if(!key){ resetUI(); return; }
+    const plan = ENT_PLANS[key];
+    picker.classList.add('has-selection');
+    label.textContent = plan.label;
+    price.textContent = fmtUSD(plan.price);
+    annual.textContent = ''; // e.g., "Billed annually — Save $X"
+    checkout.onclick = function(){ window.location.href = plan.stripe; };
+  }
+
+  resetUI(); // initial blank state
+  select.addEventListener('change', updateUI);
+})();
+</script>
+
 </body>
 </html>
