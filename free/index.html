@@ -109,8 +109,8 @@
       <li><strong>eBay Dropshipping Course</strong> — step-by-step training with everything you need to make money</li>
       <li><strong>100 Hot Items to List Now</strong> — a curated list of products you can start selling today</li>
     </ul>
-    <form>
-      <input type="email" placeholder="Enter your email" required />
+    <form id="lead-form">
+      <input id="email" name="email" type="email" placeholder="Enter your email" required />
       <button type="submit">Unlock My Free Access</button>
     </form>
     <div class="footer">
@@ -119,5 +119,29 @@
       ✔ Unsubscribe anytime
     </div>
   </div>
+  <script>
+    // Temporary client-side handler: redirect to /thanks after a valid email
+    (function(){
+      const form = document.getElementById('lead-form');
+      const emailInput = document.getElementById('email');
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const email = (emailInput.value || '').trim();
+        // Simple email format check
+        const ok = /.+@.+\..+/.test(email);
+        if (!ok) {
+          emailInput.focus();
+          emailInput.setCustomValidity('Please enter a valid email');
+          emailInput.reportValidity();
+          return;
+        }
+        // Optional: stash locally so you can use it on /thanks (client-side only)
+        try { localStorage.setItem('lead_email', email); } catch (err) {}
+        // Redirect to your thank-you page
+        window.location.href = '/thanks';
+      });
+      emailInput.addEventListener('input', () => emailInput.setCustomValidity(''));
+    })();
+  </script>
 </body>
 </html>
