@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Free Dropshipping Starter Kit</title>
+
+  <!-- FAVICONS -->
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
@@ -128,16 +136,14 @@
         e.preventDefault();
         const email = (emailInput.value || '').trim();
         // Simple email format check
-        const ok = /.+@.+\..+/.test(email);
+        const ok = /.+@.+\\..+/.test(email);
         if (!ok) {
           emailInput.focus();
           emailInput.setCustomValidity('Please enter a valid email');
           emailInput.reportValidity();
           return;
         }
-        // Optional: stash locally so you can use it on /thanks (client-side only)
         try { localStorage.setItem('lead_email', email); } catch (err) {}
-        // Redirect to your thank-you page
         window.location.href = '/thanks';
       });
       emailInput.addEventListener('input', () => emailInput.setCustomValidity(''));
@@ -145,3 +151,4 @@
   </script>
 </body>
 </html>
+
