@@ -127,28 +127,28 @@
       ✔ Unsubscribe anytime
     </div>
   </div>
+
   <script>
-    // Temporary client-side handler: redirect to /thanks after a valid email
     (function(){
       const form = document.getElementById('lead-form');
       const emailInput = document.getElementById('email');
+
       form.addEventListener('submit', function(e){
         e.preventDefault();
-        const email = (emailInput.value || '').trim();
-        // Simple email format check
-        const ok = /.+@.+\\..+/.test(email);
-        if (!ok) {
-          emailInput.focus();
-          emailInput.setCustomValidity('Please enter a valid email');
+
+        // Use native HTML5 validation for type="email" + required
+        if (!emailInput.checkValidity()) {
           emailInput.reportValidity();
           return;
         }
-        try { localStorage.setItem('lead_email', email); } catch (err) {}
+
+        // Optional: stash locally for /thanks
+        try { localStorage.setItem('lead_email', (emailInput.value || '').trim()); } catch (err) {}
+
+        // Redirect to Thank You
         window.location.href = '/thanks';
       });
-      emailInput.addEventListener('input', () => emailInput.setCustomValidity(''));
     })();
   </script>
 </body>
 </html>
-
