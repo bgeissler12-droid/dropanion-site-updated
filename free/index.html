@@ -65,6 +65,7 @@
     }
     button:hover { background: #1e6ad1; transform: translateY(-1px); }
     .footer { margin-top: 2rem; text-align: center; font-size: 0.85rem; color: #a9a9ad; }
+    .error { margin-top: 10px; font-size: 0.9rem; color: #ffb4b4; display: none; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -79,10 +80,11 @@
       <li><strong>100 Hot Items to List Now</strong> — a curated list of products you can start selling today</li>
     </ul>
 
-    <!-- Minimal ConvertKit HTML form (no JS/widget; keeps your styling) -->
-    <form action="https://app.kit.com/forms/8573393/subscriptions" method="post" accept-charset="UTF-8" target="_self">
+    <!-- ConvertKit minimal HTML form (no external JS) -->
+    <form id="ck-form" action="https://app.kit.com/forms/8573393/subscriptions" method="post" accept-charset="UTF-8" target="_self" novalidate>
       <input id="email" name="email_address" type="email" placeholder="Enter your email" required />
       <button type="submit">Unlock My Free Access</button>
+      <div id="ck-error" class="error"></div>
     </form>
 
     <div class="footer">
@@ -91,6 +93,58 @@
       ✔ Unsubscribe anytime
     </div>
   </div>
+
+  <script>
+    (function () {
+      const form = document.getElementById('ck-form');
+      const emailInput = document.getElementById('email');
+      const errorEl = document.getElementById('ck-error');
+
+      function showError(msg) {
+        if (!errorEl) return alert(msg || 'Something went wrong. Please try again.');
+        errorEl.textContent = msg || 'Something went wrong. Please try again.';
+        errorEl.style.display = 'block';
+      }
+
+      form.addEventListener('submit', async function (e) {
+        // Let native HTML validation handle invalid input UI
+        if (!emailInput.checkValidity()) return;
+
+        // Prevent default so we can ensure a clean redirect on success and capture errors
+        e.preventDefault();
+        if (errorEl) errorEl.style.display = 'none';
+
+        try {
+          const fd = new FormData();
+          fd.append('email_address', (emailInput.value || '').trim());
+
+          const res = await fetch('https://app.kit.com/forms/8573393/subscriptions', {
+            method: 'POST',
+            mode: 'cors',
+            body: fd,
+          });
+
+          if (res.ok) {
+            // Success → redirect to your Thank You page
+            window.location.href = '/thanks';
+            return;
+          }
+
+          // Common error: 422 Unprocessable Entity (e.g., invalid email)
+          const text = await res.text().catch(() => '');
+          console.warn('ConvertKit response:', res.status, text);
+          showError('Could not subscribe this email. Please try again or use a different address.');
+
+        } catch (err) {
+          console.error('Network/JS error subscribing to ConvertKit:', err);
+          // Fallback to native form submit (may show CK page if CORS blocked)
+          try { form.submit(); } 
+          catch (err2) { showError('Network error. Please disable ad blockers and try again.'); }
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
+
 
