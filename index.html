@@ -208,6 +208,49 @@ html { scroll-behavior: smooth; }
 #enterprisePicker.has-selection #epCheckout{ display:inline-block; }
 #enterprisePicker.has-selection .ep-annual{ display:block; }
 
+
+/* === Dropanion hero mobile fixes (robot + feature chips) === */
+@media (max-width: 700px) {
+  /* Allow the logo container to shrink and lay out naturally */
+  .hero-logo-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    min-width: 0 !important;
+    min-height: 0 !important;
+  }
+
+  /* Robot circle on its own row */
+  .hero-logo-img {
+    width: 128px !important;
+    height: 128px !important;
+    flex: 0 0 100%;
+    margin-bottom: 2px;
+  }
+
+  /* Turn the four chips into in-flow items under the robot (no overlap) */
+  .feature-float {
+    position: relative !important;
+    inset: auto !important;
+    width: calc(50% - 6px);
+    min-width: 0;
+    font-size: .9rem !important;
+    padding: .7em 1em .7em 2.2em !important;
+    z-index: 1;
+  }
+
+  /* Remove desktop offsets */
+  .fc1, .fc2, .fc3, .fc4 { top: auto !important; right: auto !important; bottom: auto !important; left: auto !important; }
+}
+
+/* Tablet tighten-up so chips don't drift at medium widths */
+@media (max-width: 950px) {
+  .fc1, .fc2, .fc3, .fc4 { top: auto !important; right: auto !important; bottom: auto !important; left: auto !important; }
+}
+/* === End mobile fixes === */
+
 </style>
 
 
@@ -323,7 +366,7 @@ html { scroll-behavior: smooth; }
 <div class="feature-card">
 <div class="feature-icon icon-purple"><i class="fab fa-discord"></i></div>
 <h3 class="feature-name">Exclusive Discord Group</h3>
-<p class="feature-desc">Join a private seller community for support, tips, and strategies.</p>
+<p class="feature-desc">Join a private seller community for support, tips, and strategies — plus a step-by-step dropshipping course inside.</p>
 <a class="feature-learn-more" href="learn-community.html">Learn more →</a>
 </div>
 </div>
@@ -473,6 +516,7 @@ html { scroll-behavior: smooth; }
 <li>Access to Product Research Tool</li>
 <li>Access to Smart Fulfillment Tool</li>
 <li>Exclusive Dropshipping Discord</li>
+<li>Step-by-step Dropshipping Course</li>
 <li>Basic Support</li>
 <li>Unlimited eBay Accounts</li>
 </ul>
@@ -495,6 +539,7 @@ html { scroll-behavior: smooth; }
 <li>Access to Product Research Tool</li>
 <li>Access to Smart Fulfillment Tool</li>
 <li>Exclusive Dropshipping Discord</li>
+<li>Step-by-step Dropshipping Course</li>
 <li>Priority Support</li>
 <li>Unlimited eBay Accounts</li>
 </ul>
@@ -517,6 +562,7 @@ html { scroll-behavior: smooth; }
 <li>Access to Product Research Tool</li>
 <li>Access to Smart Fulfillment Tool</li>
 <li>Exclusive Dropshipping Discord</li>
+<li>Step-by-step Dropshipping Course</li>
 <li>Dedicated Expert</li>
 <li>Unlimited eBay Accounts</li>
 </ul>
