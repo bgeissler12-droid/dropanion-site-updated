@@ -14,7 +14,7 @@
     a { color: #2A80F7; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    .nav { position: fixed; top: 0; left: 0; right: 0; width: 100%; backdrop-filter: blur(6px); background: rgba(18,18,18,.75); border-bottom: 1px solid #1d2630; z-index: 1000; }
+    .nav { position: sticky; top: 0; backdrop-filter: blur(6px); background: rgba(18,18,18,.75); border-bottom: 1px solid #1d2630; z-index: 50; }
     .nav-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 16px; padding: 12px 16px; }
     .brand { display: flex; align-items: center; gap: 10px; }
     .brand img { height: 34px; width: auto; border-radius: 8px; }
@@ -126,7 +126,7 @@
 
 /* Smooth scroll + offset for sticky nav */
 html { scroll-behavior: smooth; }
-#how, #features, #results, #pricing { scroll-margin-top: var(--nav-h); }
+#how, #features, #results, #pricing, #bookcall { scroll-margin-top: calc(var(--nav-h, 90px) + 10px); }
 
 
 /* Results & Sales Dashboard styles */
@@ -191,7 +191,7 @@ html { scroll-behavior: smooth; }
   box-shadow:0 6px 42px #2A80F740, 0 2px 12px #0007;
   padding:0; overflow:hidden;
 }
-#bookcall { scroll-margin-top: var(--nav-h); }
+#bookcall { scroll-margin-top: 90px; }
 
 /* --- Enterprise selector (blank-first) --- */
 .enterprise-picker{ display:flex; flex-direction:column; gap:.8rem; margin-top:auto; align-self:stretch; width:100%; }
@@ -209,23 +209,83 @@ html { scroll-behavior: smooth; }
 #enterprisePicker.has-selection .ep-annual{ display:block; }
 
 
-:root { --nav-h: 68px; } /* Adjust if your header is taller/shorter */
-html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
-body { padding-top: var(--nav-h); }
+/* === Dropanion hero mobile fixes (robot + feature chips) === */
+@media (max-width: 700px) {
+  /* Allow the logo container to shrink and lay out naturally */
+  .hero-logo-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    min-width: 0 !important;
+    min-height: 0 !important;
+  }
 
+  /* Robot circle on its own row */
+  .hero-logo-img {
+    width: 128px !important;
+    height: 128px !important;
+    flex: 0 0 100%;
+    margin-bottom: 2px;
+  }
 
-/* --- Anchor offset tuning for fixed nav --- */
-:root { --nav-gap: 16px; }  /* extra breathing room below the header */
-#how, #features, #results, #pricing, #bookcall {
-  scroll-margin-top: calc(var(--nav-h) + var(--nav-gap)) !important;
+  /* Turn the four chips into in-flow items under the robot (no overlap) */
+  .feature-float {
+    position: relative !important;
+    inset: auto !important;
+    width: calc(50% - 6px);
+    min-width: 0;
+    font-size: .9rem !important;
+    padding: .7em 1em .7em 2.2em !important;
+    z-index: 1;
+  }
+
+  /* Remove desktop offsets */
+  .fc1, .fc2, .fc3, .fc4 { top: auto !important; right: auto !important; bottom: auto !important; left: auto !important; }
 }
-/* If a section uses an inner heading as the anchor target, give all headings a margin too */
-h1[id], h2[id], h3[id] {
-  scroll-margin-top: calc(var(--nav-h) + var(--nav-gap)) !important;
+
+/* Tablet tighten-up so chips don't drift at medium widths */
+@media (max-width: 950px) {
+  .fc1, .fc2, .fc3, .fc4 { top: auto !important; right: auto !important; bottom: auto !important; left: auto !important; }
+}
+/* === End mobile fixes === */
+
+
+/* === Mobile nav wrap so all items are visible (no horizontal scroll) === */
+@media (max-width: 820px) {
+  .nav-inner {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .brand {
+    justify-content: center;
+  }
+  .nav-links {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    font-size: 0.95rem;
+  }
+  .nav-links a {
+    padding: 6px 10px;
+    background: rgba(42, 128, 247, 0.08);
+    border: 1px solid #1d2630;
+    border-radius: 10px;
+  }
 }
 
+@media (max-width: 420px) {
+  .nav-links {
+    font-size: 0.9rem;
+    gap: 8px 10px;
+  }
+  .nav-links a {
+    padding: 6px 8px;
+  }
+}
+/* === End mobile nav wrap === */
 
-#results-dashboard{scroll-margin-top: calc(var(--nav-h) + var(--nav-gap)) !important;}
 </style>
 
 
@@ -243,7 +303,7 @@ h1[id], h2[id], h3[id] {
 <div class="nav-links">
 <a href="#how">How It Works</a>
 <a href="#features">Features</a>
-<a href="#results-dashboard">Results</a>
+<a href="#results">Results</a>
 <a href="#pricing">Pricing</a>
 <a href="#bookcall">Free Discovery Call</a><a href="account.html">Login</a>
 </div>
@@ -347,7 +407,7 @@ h1[id], h2[id], h3[id] {
 </div>
 </div>
 <!-- SALES DASHBOARD – DEMO ACCOUNT RESULT -->
-<section class="sales-dashboard-section" id="results-dashboard">
+<section class="sales-dashboard-section">
 <div class="container dashboard-flex">
 <div class="dashboard-screenshot fancy-shadow">
 <img alt="eBay Sales Dashboard" src="sales-dashboard.png"/>
@@ -629,7 +689,7 @@ h1[id], h2[id], h3[id] {
       }
     }, 250);
   }
-  var link = document.querySelector('a[href="#results-dashboard"], a[href="#results-dashboard"]');
+  var link = document.querySelector('a[href="#results"], a[href="#results-dashboard"]');
   if(link){
     link.addEventListener('click', function(e){
       var target = document.getElementById('results');
@@ -707,39 +767,19 @@ function copyCode(code){
 
 
 <script>
+// Keep anchor offsets correct even when the navbar wraps to two rows on mobile
 (function(){
-  function navHeight(){
-    const r = getComputedStyle(document.documentElement);
-    const h = parseFloat(r.getPropertyValue('--nav-h')) || 68;
-    const g = parseFloat(r.getPropertyValue('--nav-gap')) || 16;
-    return h + g;
+  function setNavHeightVar(){
+    var nav = document.querySelector('.nav');
+    var h = nav ? Math.round(nav.getBoundingClientRect().height) : 64;
+    document.documentElement.style.setProperty('--nav-h', h + 'px');
   }
-  function scrollWithOffset(target){
-    if(!target) return;
-    const y = target.getBoundingClientRect().top + window.pageYOffset - navHeight();
-    window.scrollTo({ top: y, behavior: 'smooth' });
+  window.addEventListener('load', setNavHeightVar);
+  window.addEventListener('resize', setNavHeightVar);
+  // Also update when fonts load (in case height changes slightly)
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(setNavHeightVar);
   }
-  // Handle clicks on same-page hash links
-  document.addEventListener('click', function(e){
-    const a = e.target.closest('a[href^="#"]');
-    if(!a) return;
-    // Ignore if href just '#'
-    const hash = a.getAttribute('href');
-    if(hash.length < 2) return;
-    const el = document.querySelector(hash);
-    if(!el) return;
-    e.preventDefault();
-    history.pushState(null, '', hash);
-    scrollWithOffset(el);
-  }, {passive:false});
-
-  // Handle initial load with hash
-  window.addEventListener('load', function(){
-    if(location.hash){
-      const el = document.querySelector(location.hash);
-      if(el){ setTimeout(()=>scrollWithOffset(el), 50); }
-    }
-  });
 })();
 </script>
 
