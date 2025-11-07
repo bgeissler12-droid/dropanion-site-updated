@@ -1,61 +1,54 @@
 // /pages/api/get-dashboard-data.js
-
-export const config = { runtime: "nodejs" }; // IMPORTANT: ensure Node runtime
-
-import admin from "firebase-admin";
-
-let adminInitialized = false;
-function initAdminOrThrow() {
-  if (adminInitialized) return;
-  const saRaw = process.env.FIREBASE_SERVICE_ACCOUNT;
-  const dbUrl = process.env.FIREBASE_DATABASE_URL;
-
-  if (!saRaw) throw new Error("MISSING_ENV_FIREBASE_SERVICE_ACCOUNT");
-  if (!dbUrl) throw new Error("MISSING_ENV_FIREBASE_DATABASE_URL");
-
-  let sa;
-  try {
-    sa = JSON.parse(saRaw);
-  } catch (e) {
-    // Most common cause: malformed JSON in env var
-    throw new Error("SERVICE_ACCOUNT_JSON_PARSE_FAILED");
-  }
-
-  admin.initializeApp({
-    credential: admin.credential.cert(sa),
-    databaseURL: dbUrl,
-  });
-  adminInitialized = true;
-}
+// Revert to RTDB REST call using idToken + userId (POST)
 
 export default async function handler(req, res) {
-  // CORS
+  // CORS for the extension
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "GET" && req.method !== "POST") {
-    return res.status(405).json({ error: "method_not_allowed" });
-  }
-
-  // Accept userId from query (GET) or body (POST)
-  const userId = req.method === "GET" ? req.query.userId : req.body?.userId;
-  if (!userId || typeof userId !== "string") {
-    return res.status(400).json({ error: "userId_required" });
-  }
+  if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
 
   try {
-    initAdminOrThrow();
+    const { idToken, userId } = req.body || {};
+    if (!idToken || !userId) {
+      return res.status(400).json({ error: "idToken_and_userId_required" });
+    }
 
-    const ref = admin.database().ref(`/users/${userId}/listings`);
-    const snap = await ref.once("value");
-    const listings = snap.val() ?? {};
+    // Put your RTDB base URL in an env var so we don’t hardcode it
+    // Example: https://dropiq-ebay-software-default-rtdb.firebaseio.com
+    const RTDB_BASE = process.env.FIREBASE_RTD_URL
+      || "https://dropiq-ebay-software-default-rtdb.firebaseio.com";
 
-    return res.status(200).json({ listings });
+    // IMPORTANT: RTDB REST requires the `.json` suffix
+    const dbUrl = `${RTDB_BASE}/users/${encodeURIComponent(userId)}/listings.json?auth=${encodeURIComponent(idToken)}`;
+
+    const dbRes = await fetch(dbUrl);
+    const text = await dbRes.text(); // read raw first for better error surfacing
+
+    // If Firebase returns an error, propagate the real status (don’t hide it in a 200)
+    if (!dbRes.ok) {
+      return res.status(dbRes.status).json({
+        error: "firebase_request_failed",
+        status: dbRes.status,
+        url: dbUrl,
+        detail: safeJson(text)
+      });
+    }
+
+    // Parse JSON safely; RTDB returns null if path doesn’t exist
+    const data = safeJson(text);
+
+    return res.status(200).json({
+      listings: data ?? {}
+    });
   } catch (err) {
-    // Surface a clear error message while you debug
-    const code = (err && err.message) || "unknown";
-    console.error("get-dashboard-data failure:", code, err);
-    return res.status(500).json({ error: "server_error", detail: code });
+    console.error("get-dashboard-data error:", err);
+    return res.status(500).json({ error: "server_error", detail: String(err) });
   }
+}
+
+// Helper: best-effort JSON parse
+function safeJson(s) {
+  try { return JSON.parse(s); } catch { return s; }
 }
