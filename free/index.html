@@ -26,6 +26,11 @@
     .foot { text-align:center; color:#98a2b3; font-size:13px; margin-top:14px; }
     .link { color:#9ec5ff; text-decoration:none; }
     .link:hover { text-decoration:underline; }
+      /* Ensure ML embed never overflows container */
+    #ml-form-slot, #mlb2-31190107, #mlb2-31190107 .ml-form-embedWrapper, #mlb2-31190107 .ml-form-embedBody, #mlb2-31190107 form { width: 100% !important; max-width: 100% !important; }
+    #mlb2-31190107 * { box-sizing: border-box !important; }
+    #mlb2-31190107 input.form-control { max-width: 100% !important; }
+    .container { overflow: hidden; }
   </style>
 </head>
 <body>
