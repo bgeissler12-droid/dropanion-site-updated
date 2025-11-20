@@ -1,132 +1,107 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Welcome to Dropanion 🎉</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #121212;
-      --panel: #181a1d;
-      --muted: #8fa1b3;
-      --brand: #2A80F7;
-      --brand-2: #31A4D0;
-      --text: #ffffff;
-      --card: #121212;
-      --ok: #22c55e;
-      --warn: #f59e0b;
-      --err: #f87171;
-    }
-    html, body { height: 100%; }
-    body { margin:0; background:var(--bg); color:var(--text); font-family:'Inter',system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
-    .wrap { max-width: 920px; margin: 5rem auto; padding: 2rem 1.3rem; background:var(--panel); border-radius:22px; box-shadow:0 4px 32px #2A80F744; }
-    h1 { margin:0 0 .5rem; font-size:2rem; font-weight:800; color:var(--brand); letter-spacing:-0.02em; }
-    p { color:#b8c7ce; line-height:1.65; }
-    .sub { color: var(--brand-2); font-weight:600; margin-bottom:1.2rem; }
-    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:1.2rem; }
-    .card { background:var(--card); border-radius:14px; padding:1.2rem 1.2rem; box-shadow:0 1px 14px #0006; }
-    .hide { display:none !important; }
-    .btn { display:inline-block; margin:.6rem .4rem 0 0; padding:.8rem 1rem; border-radius:10px; background:var(--brand); color:#fff; font-weight:800; text-decoration:none; }
-    .btn.secondary { background:transparent; border:1px solid #223244; color:#cbd5e1; }
-    .line { height:1px; background:#233042; margin: 1.2rem 0; }
-    .key { color:#94a3b8; font-size:.92rem; }
-    .value { font-weight:800; color:#fff; }
-    .ok { color:var(--ok); font-weight:800; }
-    .err { color:var(--err); font-weight:800; }
-    .muted { color:var(--muted); font-size:.95rem; }
-    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
-    .logo {
-      display:flex; align-items:center; gap:.65rem; margin-bottom:1rem;
-    }
-    .circle { position: relative; display:block;
-} 
-.circle .avatar-icon{
-  position:absolute;
-  top:50%; left:50%;
-  transform: translate(-50%,-50%);
-  width:86%; height:86%;
-  border-radius:50%;
-  object-fit:contain;
-} 
-.circle { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg, #2A80F7 0%, #31A4D0 100%); box-shadow:0 0 24px #2A80F733 inset; }
-    .brand { font-weight:900; letter-spacing:.02em; }
-    .note { background:#101418; border:1px dashed #233042; border-radius:10px; padding:.9rem 1rem; }
-    .small { font-size:.9rem; }
-    .center { text-align:center; }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="logo"><div class="circle"><img src="robot-logo.png" alt="Dropanion logo" class="avatar-icon"></div><div><div class="brand">Dropanion</div><div class="small muted">Welcome aboard</div></div></div>
-    <h1>You're in! 🎉</h1>
-    <div class="sub">Thanks for subscribing. We’re getting your access ready.</div>
+<section style="background:#050816; padding:60px 16px;">
+  <div class="success-wrapper"
+       style="max-width: 800px; margin: 0 auto; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #e5e7eb;">
 
-    <div class="grid">
-      <div class="card">
-        <h2 style="margin:0 0 .4rem;font-size:1.2rem;">Purchase Status</h2>
-        <div id="statusLoading"><span class="muted">Verifying with Stripe…</span></div>
-        <div id="statusOk" class="hide"><span class="ok">Verified</span> — your subscription is active.</div>
-        <div id="statusErr" class="hide"><span class="err">Couldn’t verify</span> — please contact help@dropanion.com.</div>
-        <div class="line"></div>
-        <div class="key">Email</div>
-        <div id="custEmail" class="value muted">—</div>
-        <div class="key" style="margin-top:.7rem;">Session</div>
-        <div id="sessId" class="value muted">—</div>
-        <div class="note small" style="margin-top:1rem;">If this page looks stuck, refresh the page. If you still see an error, email <strong>help@dropanion.com</strong> from your checkout email.</div>
-      </div>
-
-      <div class="card">
-        <h2 style="margin:0 0 .4rem;font-size:1.2rem;">Your Next Steps</h2>
-        <p class="muted">These links unlock after we confirm your payment with Stripe.</p>
-        <div id="linksLocked">
-          <a class="btn secondary" href="#" onclick="return false;">Join Discord</a>
-          <a class="btn secondary" href="#" onclick="return false;">Download Software</a>
-        </div>
-        <div id="linksUnlocked" class="hide">
-          <a id="discordBtn" class="btn" href="https://discord.gg/c5tVyEME" target="_blank" rel="noopener">Join Discord</a>
-          <a id="downloadBtn" class="btn" href="#" target="_blank" rel="noopener">Download Software</a>
-          <p class="muted small" style="margin-top:.7rem;">Having trouble? Email <strong>help@dropanion.com</strong>.</p>
-        </div>
-        <div class="line"></div>
-        <a class="btn secondary" href="index.html">Back to Website</a>
-      </div>
+    <!-- Heading + subheading -->
+    <div style="text-align: center; margin-bottom: 32px;">
+      <h1 style="font-size: 2rem; margin-bottom: 12px; font-weight: 800; color: #2A80F7;">
+        You’re In! 🎉
+      </h1>
+      <p style="font-size: 1rem; color: #8fa1b3; margin:0;">
+        Your Dropanion account is active. Just follow these quick steps to get fully set up.
+      </p>
     </div>
 
-    <p class="muted small center" style="margin-top:1.6rem;">Tip: Bookmark this page for quick access to the Discord & download link.</p>
+    <!-- Dark wrapper card -->
+    <div style="
+      background: #0b1120;
+      border-radius: 22px;
+      padding: 24px 20px 20px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.65);
+    ">
+
+      <!-- Step 1: Chrome Extension -->
+      <div style="
+        border-radius: 18px;
+        padding: 18px 16px;
+        margin-bottom: 16px;
+        background: #020617;
+        box-shadow: 0 1px 14px rgba(0,0,0,0.7);
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      ">
+        <div style="font-weight: 700; font-size: 1.25rem; color: #38bdf8;">1.</div>
+        <div style="flex: 1;">
+          <h2 style="margin: 0 0 6px; font-size: 1.1rem; font-weight: 700; color: #f9fafb;">
+            Install the Dropanion Chrome Extension
+          </h2>
+          <p style="margin: 0 0 12px; color: #9ca3af; font-size: 0.95rem;">
+            Add Dropanion to Chrome from the official Chrome Web Store so you can start auto-listing and fulfilling on eBay.
+          </p>
+          <a href="https://chromewebstore.google.com/detail/dropanion-ebay-automation/ndhhbibihgolfdcapbdghopkjaofegkh"
+             target="_blank"
+             rel="noopener noreferrer"
+             style="
+               display: inline-block;
+               padding: 10px 20px;
+               border-radius: 999px;
+               text-decoration: none;
+               background: #2A80F7;
+               color: #ffffff;
+               font-weight: 700;
+               font-size: 0.95rem;
+             ">
+            Install on Chrome
+          </a>
+          <!-- LOGIN INSTRUCTION -->
+          <p style="margin: 8px 0 0; font-size: 0.85rem; color: #9ca3af;">
+            When you open the extension, log in using the <strong>same email and password</strong> you used to create your Dropanion account on the website.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 2: Discord + Full Course -->
+      <div style="
+        border-radius: 18px;
+        padding: 18px 16px;
+        background: #020617;
+        box-shadow: 0 1px 14px rgba(0,0,0,0.7);
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      ">
+        <div style="font-weight: 700; font-size: 1.25rem; color: #a855f7;">2.</div>
+        <div style="flex: 1;">
+          <h2 style="margin: 0 0 6px; font-size: 1.1rem; font-weight: 700; color: #f9fafb;">
+            Join the Dropanion Discord + Full eBay Course
+          </h2>
+          <p style="margin: 0 0 10px; color: #9ca3af; font-size: 0.95rem;">
+            Inside Discord you’ll unlock the <strong>full eBay dropshipping course</strong>, plus support, weekly updates, and scaling strategies for your stores.
+          </p>
+          <a href="https://discord.gg/NrVQHG4zeP"
+             target="_blank"
+             rel="noopener noreferrer"
+             style="
+               display: inline-block;
+               padding: 10px 20px;
+               border-radius: 999px;
+               text-decoration: none;
+               background: #5865F2;
+               color: #ffffff;
+               font-weight: 700;
+               font-size: 0.95rem;
+               box-shadow: 0 0 18px rgba(88,101,242,0.45);
+             ">
+            Join Discord + Access Course
+          </a>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <p style="text-align: center; font-size: 0.85rem; color: #9ca3af; margin-top: 18px;">
+        Having issues? Check Discord first or email <strong>help@dropanion.com</strong>.
+      </p>
+    </div>
   </div>
-
-  <noscript>
-    <div style="max-width:920px;margin:1rem auto;color:#f87171;padding:0 1.3rem;">You must enable JavaScript to verify your purchase and reveal your links.</div>
-  </noscript>
-
-  <script>
-    // Configure: where is your verification endpoint?
-    // Example (Vercel/Netlify/Express): /api/checkout-session?session_id=...
-    const VERIFY_ENDPOINT = ""; // trusting redirect mode
-
-    async function main() {
-      const trustMode = !VERIFY_ENDPOINT;
-
-      const params = new URLSearchParams(location.search);
-      const sessionId = params.get("session_id");
-      const sessEl = document.getElementById("sessId");
-      const emailEl = document.getElementById("custEmail");
-      if (sessionId) sessEl.textContent = sessionId;
-
-      // If you haven't set up a backend yet, mark as verified and reveal links.
-      if (trustMode) {
-        document.getElementById("statusLoading").classList.add("hide");
-        document.getElementById("statusOk").classList.remove("hide");
-        // Reveal links
-        document.getElementById("linksLocked").classList.add("hide");
-        document.getElementById("linksUnlocked").classList.remove("hide");
-      } catch (e) {
-        document.getElementById("statusLoading").classList.add("hide");
-        document.getElementById("statusErr").classList.remove("hide");
-      }
-    }
-    main();
-  </script>
-</body>
-</html>
+</section>
