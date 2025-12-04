@@ -771,20 +771,18 @@ function copyCode(code){
       return;
     }
 
-    const price  = opt.dataset.price;
-    const stripe = opt.dataset.stripe; // our Stripe checkout link
+    const price = opt.dataset.price;
+    const tier  = select.value; // "25k", "50k", or "100k"
 
     picker.classList.add('has-selection');
     labelEl.textContent = opt.textContent;
     priceEl.textContent = fmtUSD(price);
-    annualEl.textContent = ''; // add annual-savings text here if you want
+    annualEl.textContent = ''; // add annual-savings text if you want
 
+    // ✅ Same idea as Starter/Growth/Pro: let account.html handle auth + Stripe
     checkout.onclick = () => {
-      if (stripe) {
-        window.location.href = stripe;         // go straight to Stripe
-      } else {
-        window.location.href = '/account.html?plan=' + select.value;
-      }
+      window.location.href =
+        '/account.html?plan=enterprise&tier=' + encodeURIComponent(tier);
     };
   }
 
@@ -792,7 +790,6 @@ function copyCode(code){
   select.addEventListener('change', onChange);
 })();
 </script>
-
 
 
 <script>
