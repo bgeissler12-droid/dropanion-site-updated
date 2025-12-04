@@ -622,9 +622,31 @@ html { scroll-behavior: smooth; }
 
 <select class="ep-select" id="epSelect" aria-label="Select Enterprise package">
   <option value="" selected disabled>Choose Package</option>
-  <option value="25k"  data-price="450">25k Listings</option>
-  <option value="50k"  data-price="850">50k Listings</option>
-  <option value="100k" data-price="1500">100k Listings</option>
+
+  <!-- put your real Stripe links here -->
+  <option
+    value="25k"
+    data-price="450"
+    data-stripe="https://buy.stripe.com/8x228r2s0at5bLQ4pM6kg0h"
+  >
+    25k Listings
+  </option>
+
+  <option
+    value="50k"
+    data-price="850"
+    data-stripe="https://buy.stripe.com/cNidR99Us8kXcPUaOa6kg0i"
+  >
+    50k Listings
+  </option>
+
+  <option
+    value="100k"
+    data-price="1500"
+    data-stripe="https://buy.stripe.com/8x24gzc2AdFhdTYbSe6kg0j"
+  >
+    100k Listings
+  </option>
 </select>
 
 
@@ -739,6 +761,7 @@ function copyCode(code){
     labelEl.textContent = 'Choose Package';
     priceEl.textContent = '';
     annualEl.textContent = '';
+    checkout.onclick = null;
   }
 
   function onChange() {
@@ -748,16 +771,20 @@ function copyCode(code){
       return;
     }
 
-    const price = opt.dataset.price;
+    const price  = opt.dataset.price;
+    const stripe = opt.dataset.stripe; // our Stripe checkout link
 
     picker.classList.add('has-selection');
     labelEl.textContent = opt.textContent;
     priceEl.textContent = fmtUSD(price);
-    annualEl.textContent = ''; // e.g. "Save X% with annual billing"
+    annualEl.textContent = ''; // add annual-savings text here if you want
 
-    // send them to your account page with the selected plan
     checkout.onclick = () => {
-      window.location.href = '/account.html?plan=' + select.value;
+      if (stripe) {
+        window.location.href = stripe;         // go straight to Stripe
+      } else {
+        window.location.href = '/account.html?plan=' + select.value;
+      }
     };
   }
 
