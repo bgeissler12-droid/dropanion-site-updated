@@ -620,12 +620,13 @@ html { scroll-behavior: smooth; }
     <div class="ep-price"><span id="epPrice"></span> <small>per month</small></div>
   </div>
 
-  <select class="ep-select" id="epSelect" aria-label="Select Enterprise package">
-    <option value="" selected disabled>Choose Package</option>
-    <option value="25k">25k Listings</option>
-    <option value="50k">50k Listings</option>
-    <option value="100k">100k Listings</option>
-  </select>
+<select class="ep-select" id="epSelect" aria-label="Select Enterprise package">
+  <option value="" selected disabled>Choose Package</option>
+  <option value="25k"  data-price="450">25k Listings</option>
+  <option value="50k"  data-price="850">50k Listings</option>
+  <option value="100k" data-price="1500">100k Listings</option>
+</select>
+
 
   <button class="cta" id="epCheckout">Start Now</button>
   <div class="ep-annual" id="epAnnual" aria-live="polite"></div>
@@ -722,46 +723,49 @@ function copyCode(code){
 </script>
 
 <script>
-(function(){
-  // Replace with real prices and Stripe links
-  const ENT_PLANS = {
-    '25k': { label: '25k Listings', price: 450, stripe: 'https://buy.stripe.com/8x228r2s0at5bLQ4pM6kg0h' },
-    '50k': { label: '50k Listings', price: 850, stripe: 'https://buy.stripe.com/cNidR99Us8kXcPUaOa6kg0i' },
-    '100k': { label: '100k Listings', price: 1,500, stripe: 'https://buy.stripe.com/8x24gzc2AdFhdTYbSe6kg0j' }
-  };
+(function () {
+  const picker   = document.getElementById('enterprisePicker');
+  const select   = document.getElementById('epSelect');
+  const labelEl  = document.getElementById('epPlanLabel');
+  const priceEl  = document.getElementById('epPrice');
+  const annualEl = document.getElementById('epAnnual');
+  const checkout = document.getElementById('epCheckout');
 
-  const $ = (id) => document.getElementById(id);
-  const picker = $('enterprisePicker');
-  const select = $('epSelect');
-  const label = $('epPlanLabel');
-  const price = $('epPrice');
-  const annual = $('epAnnual');
-  const checkout = $('epCheckout');
+  const fmtUSD = (n) =>
+    Number(n).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
-  function fmtUSD(n){ return n.toLocaleString('en-US', { style:'currency', currency:'USD' }); }
-
-  function resetUI(){
+  function resetUI() {
     picker.classList.remove('has-selection');
-    label.textContent = 'Choose Package';
-    price.textContent = '';
-    annual.textContent = '';
+    labelEl.textContent = 'Choose Package';
+    priceEl.textContent = '';
+    annualEl.textContent = '';
   }
 
-  function updateUI(){
-    const key = select.value;
-    if(!key){ resetUI(); return; }
-    const plan = ENT_PLANS[key];
+  function onChange() {
+    const opt = select.selectedOptions[0];
+    if (!opt || !opt.dataset.price) {
+      resetUI();
+      return;
+    }
+
+    const price = opt.dataset.price;
+
     picker.classList.add('has-selection');
-    label.textContent = plan.label;
-    price.textContent = fmtUSD(plan.price);
-    annual.textContent = ''; // e.g., "Billed annually — Save $X"
-    checkout.onclick = function(){ window.location.href = '/account.html?plan=' + select.value; };
+    labelEl.textContent = opt.textContent;
+    priceEl.textContent = fmtUSD(price);
+    annualEl.textContent = ''; // e.g. "Save X% with annual billing"
+
+    // send them to your account page with the selected plan
+    checkout.onclick = () => {
+      window.location.href = '/account.html?plan=' + select.value;
+    };
   }
 
-  resetUI(); // initial blank state
-  select.addEventListener('change', updateUI);
+  resetUI();
+  select.addEventListener('change', onChange);
 })();
 </script>
+
 
 
 <script>
