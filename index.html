@@ -305,7 +305,7 @@ html { scroll-behavior: smooth; }
 <a href="#features">Features</a>
 <a href="#results">Results</a>
 <a href="#pricing">Pricing</a>
-<a href="#bookcall">Free Discovery Call</a><a href="account.html">Login</a>
+<a href="#bookcall">Free Discovery Call</a><a href="account.html" id="nav-auth-link">Login</a>
 </div>
 </div>
 </nav>
@@ -817,5 +817,48 @@ function copyCode(code){
 })();
 </script>
 
+
+<script type="module">
+  import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAKUr1JTa4017Cn3S9N_5VcVx9CY4NuBnY",
+    authDomain: "dropiq-ebay-software.firebaseapp.com",
+    projectId: "dropiq-ebay-software",
+    appId: "1:895307134468:web:9833f7e5376fee1c552751",
+  };
+
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const navLink = document.getElementById("nav-auth-link");
+
+  function setLoginState() {
+    if (!navLink) return;
+    navLink.textContent = "Login";
+    navLink.href = "/account.html";
+    navLink.onclick = null;
+  }
+
+  function setLogoutState() {
+    if (!navLink) return;
+    navLink.textContent = "Log out";
+    navLink.href = "#";
+    navLink.onclick = (e) => {
+      e.preventDefault();
+      signOut(auth);
+    };
+  }
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setLogoutState();
+    } else {
+      setLoginState();
+    }
+  });
+</script>
+
 </body>
 </html>
+
