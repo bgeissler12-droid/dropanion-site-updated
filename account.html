@@ -27,11 +27,38 @@
     .pill { background: var(--blue); color:#fff; border-radius:999px; padding:.25rem .6rem; font-weight:800; font-size:12px; }
     .plans { margin-top: 6px; }
     .cta-row { display:flex; gap:10px; margin-top: 14px; }
+    /* New: top-right status bar */
+    .top-right {
+      position:fixed;
+      top:10px;
+      right:16px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:13px;
+    }
   </style>
-<noscript><style>.wrap{display:block;padding:24px;}.card{max-width:720px;margin:20px auto;}</style><div class='card' style='border:1px solid #e11d48;color:#fff;background:#3f1d1d;padding:12px;border-radius:12px;'><strong>JavaScript is disabled.</strong> This page requires JavaScript to continue.</div></noscript>
+  <noscript>
+    <style>.wrap{display:block;padding:24px;}.card{max-width:720px;margin:20px auto;}</style>
+    <div class='card' style='border:1px solid #e11d48;color:#fff;background:#3f1d1d;padding:12px;border-radius:12px;'>
+      <strong>JavaScript is disabled.</strong> This page requires JavaScript to continue.
+    </div>
+  </noscript>
 </head>
 <body>
-  <a class="muted" style="position:fixed;top:10px;right:16px;" href="/">← Back to website</a>
+  <!-- Top-right: back link + logged-in status -->
+  <div class="top-right">
+    <a class="muted" href="/">← Back to website</a>
+    <span id="userStatus" class="muted hidden">
+      <span id="userEmailLabel"></span>
+      <button
+        id="logoutTopBtn"
+        style="margin-left:6px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:transparent;color:#cbd5e1;font-size:11px;cursor:pointer;">
+        Log out
+      </button>
+    </span>
+  </div>
+
   <div class="wrap">
     <!-- Auth Card -->
     <div class="card" id="authCard">
@@ -58,7 +85,11 @@
         <button id="toggleBtn" class="btn secondary">Have an account? Log in</button>
       </div>
 
-      <p class="muted" style="margin-top:10px;">By clicking continue, you agree to our <a href="/terms.html" target="_blank">Terms</a> & <a href="/privacy.html" target="_blank">Privacy</a>.</p>
+      <p class="muted" style="margin-top:10px;">
+        By clicking continue, you agree to our
+        <a href="/terms.html" target="_blank">Terms</a> &
+        <a href="/privacy.html" target="_blank">Privacy</a>.
+      </p>
     </div>
 
     <!-- Plans Card -->
@@ -114,7 +145,7 @@
           <input type="radio" name="plan" value="enterprise-100k">
         </div>
       </div>
-<div class="cta-row">
+      <div class="cta-row">
         <button id="continueBtn" class="btn primary">Continue to checkout</button>
         <button id="logoutBtn" class="btn secondary">Log out</button>
       </div>
