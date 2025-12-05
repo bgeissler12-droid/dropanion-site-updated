@@ -10,25 +10,31 @@
     * { box-sizing: border-box; }
     body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
     .wrap { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
-    .card { width: 100%; max-width: 520px; background: var(--card); border:1px solid var(--border); border-radius: 16px; padding: 22px; box-shadow: 0 10px 28px rgba(0,0,0,.35); }
+    .card { width: 100%; max-width: 520px; background: var(--card); border-radius: 16px; padding: 22px; box-shadow: 0 10px 28px rgba(0,0,0,.35); }
     h1 { margin: 8px 0 14px; font-size: 26px; font-weight: 800; text-align:center; }
     label { font-size: 13px; color: var(--muted); display:block; margin-bottom: 6px; }
     input { width: 100%; padding: 12px 14px; border-radius: 10px; border:1px solid var(--border); background:#0e1419; color:#fff; }
-    .btn { width: 100%; padding: 12px 14px; border-radius: 12px; border: none; cursor: pointer; font-weight: 800; }
-    .btn.primary { background: var(--blue); color: #fff; }
-    .btn.secondary { background: transparent; color: #cbd5e1; border:1px solid var(--border); }
+    input::placeholder { color:#64748b; }
+    input:focus { outline:none; border-color: var(--blue); box-shadow:0 0 0 1px #1d4ed8; }
+    .btn { width: 100%; padding: 11px 14px; border-radius: 999px; border:none; cursor:pointer; font-weight:700; font-size:14px; }
+    .btn.primary { background: var(--blue); color:#fff; box-shadow:0 7px 18px rgba(37,99,235,.45); }
+    .btn.primary:hover { background:#2563eb; }
+    .btn.secondary { background:transparent; border:1px solid var(--border); color:var(--muted); }
+    .btn.secondary:hover { background:#111827; color:#e5e7eb; }
+    .small { font-size: 13px; color: var(--muted); text-align:center; margin-top:10px; }
+    .link { color: var(--blue); cursor:pointer; font-weight:600; }
     .muted { color: var(--muted); font-size: 13px; text-align:center; }
     .hr { height:1px; background: var(--border); margin: 12px 0; }
     .error { color: #f87171; font-size: 13px; margin-top: 6px; min-height: 18px; }
     .success { color: #34d399; font-size: 13px; margin-top: 6px; min-height: 18px; }
     .hidden { display:none !important; }
     .center { text-align:center; }
-    .plan { display:flex; align-items:center; justify-content:space-between; border:1px solid var(--border); border-radius:12px; padding:12px 14px; margin-top:10px; background:#0f1317; }
+    .plan { display:flex; align-items:center; justify-content:space-between; border-radius:12px; padding:12px 14px; margin-top:10px; background:#0f1317; }
     .pill { background: var(--blue); color:#fff; border-radius:999px; padding:.25rem .6rem; font-weight:800; font-size:12px; }
     .plans { margin-top: 6px; }
     .cta-row { display:flex; gap:10px; margin-top: 14px; }
   </style>
-<noscript><style>.wrap{display:block;padding:24px;}.card{max-width:720px;margin:20px auto;}</style><div class='card' style='border:1px solid #e11d48;color:#fff;background:#3f1d1d;padding:12px;border-radius:12px;'><strong>JavaScript is disabled.</strong> This page requires JavaScript to continue.</div></noscript>
+<noscript><style>.wrap{display:block;padding:24px;}.card{max-width:500px;margin:40px auto;}</style><div style="color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;"><h1>JavaScript required</h1><p><strong>Oops!</strong> This page requires JavaScript to continue.</div></noscript>
 </head>
 <body>
   <a class="muted" style="position:fixed;top:10px;right:16px;" href="/">← Back to website</a>
@@ -49,72 +55,98 @@
 
       <div style="margin-top:10px;">
         <label for="password">Password</label>
-        <input id="password" type="password" placeholder="••••••••" autocomplete="new-password">
+        <input id="password" type="password" placeholder="At least 6 characters" autocomplete="new-password">
       </div>
 
       <div id="authError" class="error"></div>
-      <div class="cta-row">
-        <button id="registerBtn" class="btn primary">Register</button>
-        <button id="toggleBtn" class="btn secondary">Have an account? Log in</button>
-      </div>
+      <div id="authSuccess" class="success"></div>
 
-      <p class="muted" style="margin-top:10px;">By clicking continue, you agree to our <a href="/terms.html" target="_blank">Terms</a> & <a href="/privacy.html" target="_blank">Privacy</a>.</p>
+      <button id="authBtn" class="btn primary" style="margin-top:14px;">Continue</button>
+
+      <p class="small" id="toggleText">
+        Already have an account?
+        <span id="toggleLink" class="link">Log in</span>
+      </p>
     </div>
 
-    <!-- Plans Card -->
-    <div class="card hidden" id="plansCard">
+    <!-- Plan Selection Card -->
+    <div class="card hidden" id="planCard">
       <h1>Choose your plan</h1>
-      <p class="muted center" id="welcomeTxt">Welcome! Select a package to continue.</p>
-      <div class="plans">
-        <div class="plan">
+      <p class="muted center" id="welcomeText"></p>
+
+      <div class="hr"></div>
+
+      <div class="plans" id="plans">
+        <label class="plan">
           <div>
-            <strong>Starter</strong>
-            <div class="muted">For getting started</div>
+            <div><strong>Starter</strong></div>
+            <div class="muted" style="font-size:12px;">4,000 listings / month</div>
+          </div>
+          <div style="text-align:right;">
+            <div><strong>$50</strong><span style="font-size:12px;color:#9ca3af;"> first month</span></div>
+            <div style="font-size:12px;color:#9ca3af;">then $100/mo</div>
           </div>
           <input type="radio" name="plan" value="starter">
-        </div>
+        </label>
 
-        <div class="plan">
+        <label class="plan">
           <div>
-            <strong>Growth</strong>
-            <div class="muted">For scaling up</div>
+            <div><strong>Growth</strong> <span class="pill">Most Popular</span></div>
+            <div class="muted" style="font-size:12px;">8,000 listings / month</div>
+          </div>
+          <div style="text-align:right;">
+            <div><strong>$150/mo</strong></div>
           </div>
           <input type="radio" name="plan" value="growth">
-        </div>
+        </label>
 
-        <div class="plan">
+        <label class="plan">
           <div>
-            <strong>Pro</strong>
-            <div class="muted">For power users</div>
+            <div><strong>Pro</strong></div>
+            <div class="muted" style="font-size:12px;">15,000 listings / month</div>
+          </div>
+          <div style="text-align:right;">
+            <div><strong>$250/mo</strong></div>
           </div>
           <input type="radio" name="plan" value="pro">
-        </div>
+        </label>
 
-        <div class="plan">
+        <!-- Enterprise options -->
+        <label class="plan">
           <div>
-            <span class="pill">Enterprise</span>
-            <strong style="margin-left:8px;">25k Listings</strong>
+            <div><strong>Enterprise — 25k Listings</strong></div>
+            <div class="muted" style="font-size:12px;">For large volume power sellers</div>
+          </div>
+          <div style="text-align:right;">
+            <div><strong>Custom</strong></div>
           </div>
           <input type="radio" name="plan" value="enterprise-25k">
-        </div>
+        </label>
 
-        <div class="plan">
+        <label class="plan">
           <div>
-            <span class="pill">Enterprise</span>
-            <strong style="margin-left:8px;">50k Listings</strong>
+            <div><strong>Enterprise — 50k Listings</strong></div>
+            <div class="muted" style="font-size:12px;">Scaling teams and agencies</div>
+          </div>
+          <div style="text-align:right;">
+            <div><strong>Custom</strong></div>
           </div>
           <input type="radio" name="plan" value="enterprise-50k">
-        </div>
+        </label>
 
-        <div class="plan">
+        <label class="plan">
           <div>
-            <span class="pill">Enterprise</span>
-            <strong style="margin-left:8px;">100k Listings</strong>
+            <div><strong>Enterprise — 100k Listings</strong></div>
+            <div class="muted" style="font-size:12px;">Enterprise-grade automation</div>
+          </div>
+          <div style="text-align:right;">
+            <div><strong>Custom</strong></div>
           </div>
           <input type="radio" name="plan" value="enterprise-100k">
-        </div>
+        </label>
       </div>
-<div class="cta-row">
+
+      <div class="cta-row">
         <button id="continueBtn" class="btn primary">Continue to checkout</button>
         <button id="logoutBtn" class="btn secondary">Log out</button>
       </div>
@@ -122,6 +154,50 @@
       <div id="planSuccess" class="success"></div>
     </div>
   </div>
+
+  <!-- Enterprise Stripe overrides for plan -> checkout -->
+  <script>
+    (function () {
+      const ENTERPRISE_STRIPE_LINKS = {
+        'enterprise-25k': 'https://buy.stripe.com/8x228r2s0at5bLQ4pM6kg0h',
+        'enterprise-50k': 'https://buy.stripe.com/cNidR99Us8kXcPUaOa6kg0i',
+        'enterprise-100k': 'https://buy.stripe.com/8x24gzc2AdFhdTYbSe6kg0j'
+      };
+
+      function onEnterpriseContinueClick(event) {
+        const selected = document.querySelector('input[name="plan"]:checked');
+        if (!selected) {
+          // Let the existing JS show its own "choose a plan" error message.
+          return;
+        }
+
+        const plan = selected.value;
+        const url = ENTERPRISE_STRIPE_LINKS[plan];
+
+        // For non-enterprise plans, do nothing here and let the existing JS handle checkout.
+        if (!url) return;
+
+        // For enterprise plans, fully override the old behaviour and go straight to Stripe.
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        window.location.href = url;
+      }
+
+      function initEnterpriseOverride() {
+        const btn = document.getElementById('continueBtn');
+        if (!btn) return;
+
+        // Use capture phase so this runs before any other click handlers.
+        btn.addEventListener('click', onEnterpriseContinueClick, true);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initEnterpriseOverride);
+      } else {
+        initEnterpriseOverride();
+      }
+    })();
+  </script>
 
   <!-- Firebase (modular v10) -->
   <script type="module" src="/account.js"></script>
