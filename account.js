@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signOut
+  signOut,
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
 // 1) Firebase config
@@ -18,20 +18,20 @@ const firebaseConfig = {
 // 2) Stripe Payment Links (LIVE)
 const PAYMENT_LINKS = {
   starter: "https://buy.stripe.com/28E5kDgiQgRt2bge0m6kg0e",
-  growth:  "https://buy.stripe.com/28E4gz3w4at59DI7BY6kg0f",
-  pro:     "https://buy.stripe.com/14A6oH2s030D6rwcWi6kg0g",
+  growth: "https://buy.stripe.com/28E4gz3w4at59DI7BY6kg0f",
+  pro: "https://buy.stripe.com/14A6oH2s030D6rwcWi6kg0g",
 
-  // 🔹 FIXED: use the same slugs as your radios and ?plan= param
+  // Enterprise tiers (match the radio values + ?plan= values)
   "enterprise-25k": "https://buy.stripe.com/8x228r2s0at5bLQ4pM6kg0h",
   "enterprise-50k": "https://buy.stripe.com/cNidR99Us8kXcPUaOa6kg0i",
   "enterprise-100k": "https://buy.stripe.com/8x24gzc2AdFhdTYbSe6kg0j",
 };
 
-// Optional: TEST links
+// Optional: TEST links (only used if you add them AND run on localhost)
 const TEST_PAYMENT_LINKS = {
   starter: "",
-  growth:  "",
-  pro:     "",
+  growth: "",
+  pro: "",
   "enterprise-25k": "",
   "enterprise-50k": "",
   "enterprise-100k": "",
@@ -42,29 +42,35 @@ const isLocal =
   location.hostname.includes("127.0.0.1");
 
 const LINKS =
-  (isLocal && Object.values(TEST_PAYMENT_LINKS).some(v => v))
+  isLocal && Object.values(TEST_PAYMENT_LINKS).some((v) => v)
     ? TEST_PAYMENT_LINKS
     : PAYMENT_LINKS;
 
+// Firebase init
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// UI
-const $ = id => document.getElementById(id);
-const authCard   = $("authCard");
-const plansCard  = $("plansCard");
-const formTitle  = $("formTitle");
-const authError  = $("authError");
-const planError  = $("planError");
+// UI helpers
+const $ = (id) => document.getElementById(id);
+const authCard = $("authCard");
+const plansCard = $("plansCard");
+const formTitle = $("formTitle");
+const authError = $("authError");
+const planError = $("planError");
 const planSuccess = $("planSuccess");
-const toggleBtn  = $("toggleBtn");
+const toggleBtn = $("toggleBtn");
 const registerBtn = $("registerBtn");
 const continueBtn = $("continueBtn");
-const logoutBtn  = $("logoutBtn");
-const email      = $("email");
-const email2     = $("email2");
-const password   = $("password");
+const logoutBtn = $("logoutBtn");
+const email = $("email");
+const email2 = $("email2");
+const password = $("password");
 const welcomeTxt = $("welcomeTxt");
+
+// New: top-right status elements
+const userStatus = $("userStatus");
+const userEmailLabel = $("userEmailLabel");
+const logoutTopBtn = $("logoutTopBtn");
 
 // Preselect plan if passed in ?plan=
 const urlParams = new URLSearchParams(location.search);
@@ -76,8 +82,8 @@ if (preselect) {
   if (el) el.checked = true;
 }
 
+// Toggle register/login mode
 let mode = "register"; // or "login"
-
 toggleBtn.addEventListener("click", () => {
   if (mode === "register") {
     mode = "login";
@@ -97,6 +103,7 @@ toggleBtn.addEventListener("click", () => {
   authError.textContent = "";
 });
 
+// Basic validation for register
 function validateRegister() {
   if (!email.value || !email2.value || !password.value)
     return "Please complete all fields.";
@@ -107,6 +114,7 @@ function validateRegister() {
   return null;
 }
 
+// Register / login handler
 registerBtn.addEventListener("click", async () => {
   authError.textContent = "";
   try {
@@ -132,18 +140,31 @@ registerBtn.addEventListener("click", async () => {
   }
 });
 
-logoutBtn.addEventListener("click", async () => {
-  await signOut(auth);
-});
+// Logout buttons (bottom + top-right)
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+  });
+}
+if (logoutTopBtn) {
+  logoutTopBtn.addEventListener("click", async () => {
+    await signOut(auth);
+  });
+}
 
-// Auth state → redirect logic
+// Auth state → UI + redirect logic
 onAuthStateChanged(auth, (user) => {
   const urlParams = new URLSearchParams(location.search);
-  const planKey   = (urlParams.get("plan") || "").toLowerCase();
-  const linkFor   = (k) => (k && LINKS[k]) ? LINKS[k] : null;
+  const planKey = (urlParams.get("plan") || "").toLowerCase();
+
+  const linkFor = (k) => (k && LINKS[k] ? LINKS[k] : null);
 
   if (user) {
-    // If a plan was specified, go straight to its Stripe Payment Link
+    // Show top-right "logged in" UI
+    if (userStatus) userStatus.classList.remove("hidden");
+    if (userEmailLabel) userEmailLabel.textContent = user.email || "";
+
+    // If a plan is in the URL, go straight to Stripe (checkout flow)
     const planLink = linkFor(planKey);
     if (planLink) {
       const params = new URLSearchParams();
@@ -154,14 +175,22 @@ onAuthStateChanged(auth, (user) => {
       location.href = url;
       return;
     }
-    // No valid plan specified: send the user back to the homepage pricing section
-    location.href = "/#pricing";
+
+    // No plan specified: show plan selection UI instead of bouncing back to pricing
+    if (authCard) authCard.classList.add("hidden");
+    if (plansCard) {
+      plansCard.classList.remove("hidden");
+    }
+    if (welcomeTxt) {
+      welcomeTxt.textContent = user.email
+        ? `Logged in as ${user.email}. Choose a plan to continue.`
+        : "Logged in. Choose a plan to continue.";
+    }
   } else {
-    // Not authenticated: show the email/password form
-    const authCardEl  = document.getElementById("authCard");
-    const plansCardEl = document.getElementById("plansCard");
-    if (plansCardEl) plansCardEl.classList.add("hidden");
-    if (authCardEl) authCardEl.classList.remove("hidden");
+    // Not authenticated → show auth form, hide plans + top-right status
+    if (userStatus) userStatus.classList.add("hidden");
+    if (authCard) authCard.classList.remove("hidden");
+    if (plansCard) plansCard.classList.add("hidden");
   }
 });
 
