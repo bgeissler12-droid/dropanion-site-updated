@@ -12,17 +12,16 @@
 
     // 2) Stripe Payment Links (LIVE)
     const PAYMENT_LINKS = {
-      starter: "https://buy.stripe.com/5kQaEX6IgcBdaHMaOa6kg07",
-      growth:  "https://buy.stripe.com/cNicN59Usbx99DI9K66kg08",
-      pro:     "https://buy.stripe.com/9B68wPfeMat57vAf4q6kg09",
-      "15k":   "https://buy.stripe.com/eVq5kDeaIgRteY22hE6kg0a",
-      "25k":   "https://buy.stripe.com/bJedR9giQbx9dTYf4q6kg0b",
-      "35k":   "https://buy.stripe.com/aFa4gz5EceJldTY4pM6kg0c",
-      "50k":   "https://buy.stripe.com/9B63cv5EcgRteY2bSe6kg0d",
+      starter: "https://buy.stripe.com/28E5kDgiQgRt2bge0m6kg0e",
+      growth:  "https://buy.stripe.com/28E4gz3w4at59DI7BY6kg0f",
+      pro:     "https://buy.stripe.com/14A6oH2s030D6rwcWi6kg0g",
+      "25k":   "https://buy.stripe.com/8x228r2s0at5bLQ4pM6kg0h",
+      "50k":   "https://buy.stripe.com/cNidR99Us8kXcPUaOa6kg0i",
+      "100k":   "https://buy.stripe.com/8x24gzc2AdFhdTYbSe6kg0j",
     };
 
     // Optional: TEST links
-    const TEST_PAYMENT_LINKS = { starter:"", growth:"", pro:"", "15k":"", "25k":"", "35k":"", "50k":"" };
+    const TEST_PAYMENT_LINKS = { starter:"", growth:"", pro:"", "25k":"", "50k":"", "100k":"" };
 
     const isLocal = location.hostname === "localhost" || location.hostname.includes("127.0.0.1");
     const LINKS = (isLocal && Object.values(TEST_PAYMENT_LINKS).some(v => v)) ? TEST_PAYMENT_LINKS : PAYMENT_LINKS;
