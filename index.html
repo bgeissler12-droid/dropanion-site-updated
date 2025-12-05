@@ -775,21 +775,29 @@ function copyCode(code){
     const tier  = select.value; // "25k", "50k", or "100k"
 
     picker.classList.add('has-selection');
-    labelEl.textContent = opt.textContent;
+    labelEl.textContent = opt.textContent.trim();
     priceEl.textContent = fmtUSD(price);
     annualEl.textContent = ''; // add annual-savings text if you want
 
-    // ✅ Same idea as Starter/Growth/Pro: let account.html handle auth + Stripe
+    // Map dropdown tier to a concrete plan slug that account.html / account.js expects
+    const planSlug = (tier === '25k')
+      ? 'enterprise-25k'
+      : (tier === '50k')
+      ? 'enterprise-50k'
+      : (tier === '100k')
+      ? 'enterprise-100k'
+      : '';
+
     checkout.onclick = () => {
-      window.location.href =
-        '/account.html?plan=enterprise&tier=' + encodeURIComponent(tier);
+      if (!planSlug) return;
+      // Same flow as the main tiers: let account.html handle auth + Stripe
+      window.location.href = '/account.html?plan=' + encodeURIComponent(planSlug);
     };
   }
 
   resetUI();
   select.addEventListener('change', onChange);
-})();
-</script>
+})();</script>
 
 
 <script>
