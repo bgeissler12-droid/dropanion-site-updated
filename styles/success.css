@@ -1,0 +1,126 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #050816; /* full-page dark background */
+  color: #e5e7eb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+.success-section {
+  background: #050816;
+  padding: 60px 16px;
+}
+
+.success-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  color: #e5e7eb;
+}
+
+.success-heading {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.success-heading h1 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  font-weight: 800;
+  color: #2A80F7;
+}
+
+.success-heading p {
+  font-size: 1rem;
+  color: #8fa1b3;
+  margin: 0;
+}
+
+.success-card {
+  background: #0b1120;
+  border-radius: 22px;
+  padding: 24px 20px 20px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.65);
+}
+
+.success-step {
+  border-radius: 18px;
+  padding: 18px 16px;
+  margin-bottom: 16px;
+  background: #020617;
+  box-shadow: 0 1px 14px rgba(0,0,0,0.7);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.success-step:last-of-type {
+  margin-bottom: 0;
+}
+
+.step-number {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.step-number.step-1 {
+  color: #38bdf8;
+}
+
+.step-number.step-2 {
+  color: #a855f7;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-content h2 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f9fafb;
+}
+
+.step-content p {
+  margin: 0 0 12px;
+  color: #9ca3af;
+  font-size: 0.95rem;
+}
+
+.step-content p.instruction {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.step-content p.instruction:last-of-type {
+  margin: 4px 0 0;
+}
+
+.step-button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.step-button.chrome {
+  background: #2A80F7;
+  color: #ffffff;
+}
+
+.step-button.discord {
+  background: #5865F2;
+  color: #ffffff;
+  box-shadow: 0 0 18px rgba(88,101,242,0.45);
+}
+
+.success-footer {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-top: 18px;
+}

@@ -1,0 +1,38 @@
+body{
+  background:#121212;
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  margin:0;
+}
+
+.wrap{
+  max-width:900px;
+  margin:2.5rem auto;
+  padding:2rem 1.3rem;
+  background:#181a1d;
+  border-radius:22px;
+  box-shadow:0 4px 32px #2A80F744;
+}
+
+h1{
+  font-size:2rem;
+  font-weight:800;
+  margin:.2rem 0 .5rem;
+  color:#2A80F7;
+}
+
+h2{
+  font-size:1.2rem;
+  font-weight:800;
+  margin:1.6rem 0 .6rem;
+}
+
+p,li{
+  color:#b8c7ce;
+  line-height:1.7;
+  font-size:1.02rem;
+}
+
+a{
+  color:#2A80F7;
+}

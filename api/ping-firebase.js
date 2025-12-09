@@ -1,5 +1,5 @@
 // api/ping-firebase.js
-const { db } = require("./firebase-admin");
+const { db } = require("../lib/firebase-admin");
 
 module.exports = async (req, res) => {
   try {
